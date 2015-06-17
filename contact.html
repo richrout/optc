@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Turtle Time Calc</title>
+		<link rel="stylesheet" href="css/normalize.css">
+		<link rel="stylesheet" href="css/main.css">
+		<link href="css/polyglot-language-switcher-2.css" rel="stylesheet">
+		<link rel="shortcut icon" type="image/ico" href="favicon.ico">
+		<link href='http://fonts.googleapis.com/css?family=Squada+One|Lora' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
+		<script src="app/lib/moment.min.js"></script>
+		<script src="app/lib/angular-local-storage.min.js"></script>
+		<script src="app/lib/angular-translate.min.js"></script>
+		<script src="app/lib/angular-timer.min.js"></script>
+		<script src="app/lib/humanize-duration.js"></script>
+		<script src="app/lib/ng-table.min.js"></script>
+		<script src="app/lib/ui-bootstrap-tpls-0.13.0.min.js"></script>
+		<script src="app/lib/angular-polyglot.language.switcher.js"></script>
+		<script src="app/lib/momentjs/locale/de.js"></script>
+		<script src="app/lib/momentjs/locale/es.js"></script>
+		<script src="app/lib/bower_components/angular-animate/angular-animate.min.js"></script>
+		<script src="app/lib/promise-tracker.js"></script>
+		<script src="app/app.js"></script>
+		<script src="app/controllers/contactCtrl.js"></script>
+		<script src="app/controllers/localeCtrl.js"></script>
+		<script src="app/controllers/navbarCtrl.js"></script>
+		<script src="app/directives/eventDirective.js"></script>
+		<script src="app/directives/collapseDirective.js"></script>
+		<script src="app/config/localizeConfig.js"></script>
+<!-- 		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-62547536-1', 'auto');
+		  ga('send', 'pageview');
+
+		</script> -->
+	</head>
+
+	<body ng-app="app" ng-controller="LocaleCtrl as locale" ng-cloak>
+		
+		<nav class="navbar navbar-default" ng-controller="NavbarCtrl" ng-click="$event.stopPropagation()">
+				<div class="container">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" ng-click="isCollapsed=!isCollapsed">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span> 
+						</button>
+					</div>
+					<div class="navbar-collapse" collapse="isCollapsed">
+						<ul class="nav navbar-nav">
+							<li><a href="index.html">{{ 'NAV_TURTLE' | translate }}</a></li>
+							<li><a href="barrel.html">{{ 'NAV_BARREL' | translate }}</a></li>
+							<li><a href="event.html">{{ 'NAV_EVENT' | translate }}</a></li>
+							<li><a href="event-jpn.html">{{ 'NAV_EVENT' | translate }}(JPN)</a></li>
+							<li id="settings" class="active"><a href="settings.html">{{ 'NAV_SETTINGS' | translate }}</a></li>
+						</ul>
+						<div class="language-picker nav pull-right">
+							<pls id="pls1" items="plsModel.languages" open-mode="click" show-flag="true" selected-lang="{{locale.flag}}" language-changed-callback="onLanguageChanged(lang)"></pls>
+						</div>
+					</div>
+				</div>
+		</nav>
+
+		<div class="container contact" data-ng-controller="ContactCtrl as contact">
+			<h1>Contact Form</h1>
+			<div id="messages" class="alert alert-success" data-ng-show="contact.messages" data-ng-bind="messages"></div>
+			<div data-ng-show="contact.progress.active()" style="color: red; font-size: 50px;">Sending&hellip;</div>
+			<form name="contactForm" novalidate role="form">
+				<div class="form-group">
+					<label for="name">Name</label>
+					<span class="label label-danger" data-ng-show="contact.submitted && contactForm.name.$error.required">Required!</span>
+					<input type="text" name="name" data-ng-model="contact.name" class="form-control" required />
+				</div>
+
+				<div class="form-group">
+					<label for="email">E-mail address (optional)</label>
+					<span class="label label-danger" data-ng-show="contact.submitted && contactForm.email.$error.required">Required!</span>
+					<span class="label label-danger" data-ng-show="contact.submitted && contactForm.$error.email">Invalid email!</span>
+					<input type="email" name="email" data-ng-model="contact.email" class="form-control"/>
+				</div>
+
+				<div class="form-group">
+					<label for="subjectList">What is the nature of your request?</label>
+					<span class="label label-danger" data-ng-show="contact.submitted && contactForm.subjectList.$error.required">Required!</span>
+					<select name="subjectList"
+					data-ng-model="contact.subject"
+					data-ng-options="option.name for option in contact.subjectOptions"
+					class="form-control"
+					ng-init="contact.subject = contact.subjectOptions[0]"
+					required>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="comments">Description</label>
+					<span class="label label-danger" data-ng-show="contact.submitted && contactForm.comments.$error.required">Required!</span>
+					<textarea name="comments" data-ng-model="contact.comments" class="form-control" required></textarea>
+				</div>
+
+				<button data-ng-disabled="progress.active()" data-ng-click="submit(contactForm)" class="btn btn-default">Submit</button>
+			</form>
+		</div>
+
+	</body>
+
+</html>

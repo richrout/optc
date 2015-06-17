@@ -16,7 +16,8 @@
 
 .container {
   max-width: 900px !important;
-  margin: auto; }
+  margin: auto;
+  text-align: center; }
 
 #settings {
   display: none; }
@@ -25,8 +26,6 @@
   background: #fff !important;
   margin-top: -20px;
   padding: 0 !important; }
-  .jumbotron h1, .jumbotron h2 {
-    font-family: 'Squada One', cursive; }
   .jumbotron p {
     font-family: Lora,sans-serif;
     margin: 0; }
@@ -36,11 +35,11 @@
     margin-left: 20px;
     margin-right: 5px; }
 
+h1, h2 {
+  font-family: 'Squada One', cursive !important; }
+
 .id {
   margin-top: 15px; }
-
-.container {
-  text-align: center; }
 
 .next_week {
   margin-top: 50px; }
@@ -92,5 +91,11 @@ table {
 
 .nav, .pagination, .carousel, .panel-title a {
   cursor: pointer; }
+
+/*====================================
+=            CONTACT PAGE            =
+====================================*/
+.contact {
+  text-align: left; }
 
 /*# sourceMappingURL=main.css.map */
