@@ -21,8 +21,22 @@ angular.module('app')
 			}
 		};
 
-		// JSONP request
-		var $promise = $http.jsonp('response.json', config)
+		var $promise = $http(
+		{
+			url: 'https://api.postmarkapp.com',
+			method: 'POST',
+			params: {data: {
+				'From': self.name + " cyung@bu.edu",
+				'To': 'cyung@bu.edu',
+				'Subject': self.subject,
+				'TextBody': self.comments
+			}},
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'X-Postmark-Server-Token': '4d940b17-270e-4075-832a-87aa52edbd38'
+			}
+		})
 			.success(function(data, status, headers, config) {
 				if (data.status == 'OK') {
 					self.name = null;
@@ -48,6 +62,6 @@ angular.module('app')
 				}, 3000);
 			});
 
-		// // Track the request and show its progress to the user.
-		// self.progress.addPromise($promise);
+		// Track the request and show its progress to the user.
+		self.progress.addPromise($promise);
 	});
